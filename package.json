@@ -25,6 +25,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@swc/cli": "^0.7.3",
     "@swc/core": "^1.11.21",
     "@types/bun": "^1.2.10",
     "typescript": "^5.8.3"
