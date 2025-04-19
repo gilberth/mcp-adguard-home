@@ -30,15 +30,15 @@ Configure your MCP client to use `mcp-adguard-home` (it's a stdio server).
 
 ## 🧰 Rewrite DNS Tools
 
-- 📋 **List Rewrite DNS Records** `(list_rewrite_dns_records)`
-- ➕ **Add Rewrite DNS Record** `(add_rewrite_dns_record)`
-- ❌ **Delete Rewrite DNS Record** `(remove_rewrite_dns_record)`
+- 📋 **List records** (`list_rewrite_dns_records`)
+- ➕ **Add record** (`add_rewrite_dns_record`)
+- ❌ **Delete record** (`remove_rewrite_dns_record`)
 
 ## 🔧 DNS Filtering Tools
 
-- 📝 **List Filtering DNS Rules** `(list_dns_filtering_rules)`
-- 🔧 **Add/Update Filtering DNS Rules** `(manage_dns_filtering_rules)`
-- ❌ **Delete Filtering DNS Rules** `(remove_dns_filtering_rules)`
+- 📝 **List rules** (`list_dns_filtering_rules`)
+- 🔧 **Add/Update rules** (`manage_dns_filtering_rules`)
+- ❌ **Delete rules** (`remove_dns_filtering_rules`)
 
 ## 📄 License
 
