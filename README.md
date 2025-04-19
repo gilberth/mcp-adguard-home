@@ -3,7 +3,6 @@
 A [Model Context Protocol](https://modelcontextprotocol.io/introduction) server implementation for [AdGuard Home](https://adguard.com/en/adguard-home/overview.html) that enables AI agents to query and manage DNS records, filtering rules and more.
 
 [![npm version](https://badge.fury.io/js/@fcannizzaro%2Fmcp-adguard-home.svg)](https://www.npmjs.com/package/@fcannizzaro/mcp-adguard-home)
-
 [![Publish Package to npmjs](https://github.com/fcannizzaro/mcp-adguard-home/actions/workflows/publish-package.yaml/badge.svg)](https://github.com/fcannizzaro/mcp-adguard-home/actions/workflows/publish-package.yaml)
 
 ## Installation
