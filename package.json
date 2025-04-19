@@ -1,15 +1,24 @@
 {
   "name": "mcp-adguard-home",
+  "description": "A Model Context Protocol server implementation for AdGuard Home that enables AI agents to query and manage DNS records, filtering rules and more",
   "version": "1.0.0",
-  "author": "fcannizzaro",
+  "author": "Francesco Saverio Cannizzaro <fcannizzaro>",
   "main": "dist/index.js",
+  "license": "MIT",
+  "repository": "https://github.com/fcannizzaro/mcp-adguard-home",
+  "types": "./index.d.ts",
   "scripts": {
-    "build": "swc src --out-dir dist",
+    "build": "swc src --source-maps --out-dir dist",
     "inspect": "@modelcontextprotocol/inspector bun src/index.ts"
   },
   "bin": {
     "mcp-adguard-home": "dist/index.js"
   },
+  "type": "module",
+  "keywords": [
+    "mcp",
+    "adguard-home"
+  ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.1",
     "zod": "^3.24.3"
@@ -19,5 +28,8 @@
     "@swc/core": "^1.11.21",
     "@types/bun": "^1.2.10",
     "typescript": "^5.8.3"
+  },
+  "publishConfig": {
+    "provenance": true
   }
 }
