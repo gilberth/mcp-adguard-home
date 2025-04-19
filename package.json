@@ -1,0 +1,23 @@
+{
+  "name": "mcp-adguard-home",
+  "version": "1.0.0",
+  "author": "fcannizzaro",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "swc src --out-dir dist",
+    "inspect": "@modelcontextprotocol/inspector bun src/index.ts"
+  },
+  "bin": {
+    "mcp-adguard-home": "dist/index.js"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.10.1",
+    "zod": "^3.24.3"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.9.4",
+    "@swc/core": "^1.11.21",
+    "@types/bun": "^1.2.10",
+    "typescript": "^5.8.3"
+  }
+}
