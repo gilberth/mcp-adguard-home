@@ -8,8 +8,22 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
+server.tool("list_rewrite_dns_records", "List all DNS records", async () => {
+  const records = await Api.rewrite.list();
+  return {
+    content: [
+      {
+        type: "text",
+        text: records
+          .map((record) => `${record.domain} -> ${record.ip}`)
+          .join("\n"),
+      },
+    ],
+  };
+});
+
 server.tool(
-  "add_dns_record",
+  "add_rewrite_dns_record",
   "Add a DNS record using the host and ip address",
   {
     domain: z.string(),
@@ -27,19 +41,22 @@ server.tool(
   }
 );
 
-server.tool("list_dns_records", "List all DNS records", async () => {
-  const records = await Api.rewrite.list();
-  return {
-    content: [
-      {
-        type: "text",
-        text: records
-          .map((record) => `${record.domain} -> ${record.ip}`)
-          .join("\n"),
-      },
-    ],
-  };
-});
+server.tool(
+  "remove_rewrite_dns_record",
+  "Remove a DNS record using the domain and ip address",
+  {
+    domain: z.string(),
+    ip: z.string(),
+  },
+  async ({ domain, ip }) => {
+    await Api.rewrite.remove(domain, ip);
+    return {
+      content: [
+        { type: "text", text: `Removed DNS entry: ${domain} -> ${ip}` },
+      ],
+    };
+  }
+);
 
 server.tool(
   "list_dns_filtering_rules",
@@ -78,7 +95,7 @@ server.tool(
 );
 
 server.tool(
-  "remove_dns_filtering_rules",
+  "remove_rdns_filtering_rules",
   "Remove a DNS filtering record rules",
   {
     domains: z.array(z.string()),
@@ -91,23 +108,6 @@ server.tool(
           type: "text",
           text: `Removed DNS record rules:\n${domains.join("\n")}`,
         },
-      ],
-    };
-  }
-);
-
-server.tool(
-  "remove_dns_record",
-  "Remove a DNS record using the domain and ip address",
-  {
-    domain: z.string(),
-    ip: z.string(),
-  },
-  async ({ domain, ip }) => {
-    await Api.rewrite.remove(domain, ip);
-    return {
-      content: [
-        { type: "text", text: `Removed DNS entry: ${domain} -> ${ip}` },
       ],
     };
   }

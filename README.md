@@ -1,19 +1,20 @@
-# AdGuard Home MCP
+# 🛡️ AdGuard Home MCP
 
-A [Model Context Protocol](https://modelcontextprotocol.io/introduction) server implementation for [AdGuard Home](https://adguard.com/en/adguard-home/overview.html) that enables AI agents to query and manage DNS records, filtering rules and more.
+A [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP) server implementation for [AdGuard Home](https://adguard.com/en/adguard-home/overview.html).  
+Easily query and manage DNS records, filtering rules, and more via AI agents.
 
 [![npm version](https://badge.fury.io/js/@fcannizzaro%2Fmcp-adguard-home.svg)](https://www.npmjs.com/package/@fcannizzaro/mcp-adguard-home)
-[![Publish Package to npmjs](https://github.com/fcannizzaro/mcp-adguard-home/actions/workflows/publish-package.yaml/badge.svg)](https://github.com/fcannizzaro/mcp-adguard-home/actions/workflows/publish-package.yaml)
+[![CI: Publish Package](https://github.com/fcannizzaro/mcp-adguard-home/actions/workflows/publish-package.yaml/badge.svg)](https://github.com/fcannizzaro/mcp-adguard-home/actions/workflows/publish-package.yaml)
 
-## Installation
+## 📦 Installation
 
 ```bash
 npm i -g @fcannizzaro/mcp-adguard-home
 ```
 
-## Configuration
+## ⚙️ Configuration
 
-Environment Variables:
+Set the following environment variables:
 
 ```dotenv
 ADGUARD_USERNAME=
@@ -21,42 +22,24 @@ ADGUARD_PASSWORD=
 ADGUARD_URL=
 ```
 
-## Usage
+## 🚀 Usage
 
-Configure your MCP client to use `mcp-adguard-home` as the server.
+Configure your MCP client to use `mcp-adguard-home` (it's a stdio server).
 
 ![AdGuard Home](/.media/adguard-home.gif)
 
-## Tools
+## 🧰 Rewrite DNS Tools
 
-### List rewrite dns records
+- 📋 **List Rewrite DNS Records** `(list_rewrite_dns_records)`
+- ➕ **Add Rewrite DNS Record** `(add_rewrite_dns_record)`
+- ❌ **Delete Rewrite DNS Record** `(remove_rewrite_dns_record)`
 
-> list all dns records and make a table with the results
+## 🔧 DNS Filtering Tools
 
-### Add rewrite dns record
+- 📝 **List Filtering DNS Rules** `(list_dns_filtering_rules)`
+- 🔧 **Add/Update Filtering DNS Rules** `(manage_dns_filtering_rules)`
+- ❌ **Delete Filtering DNS Rules** `(remove_dns_filtering_rules)`
 
-> add dns record for test.mydomain.com 192.168.1.10
->
-> add dns record for test.mydomain.com 192.168.1.10
+## 📄 License
 
-### Delete rewrite dns record
-
-> delete dns record for test.mydomain.com
->
-> delete the latest dns record
-
-### Add filtering dns rule
-
-> block the test.mydomain.com domain
->
-> add dns filtering rule for test.mydomain.com
-
-### Delete filtering dns rule
-
-> delete filtering rule for test.mydomain.com
->
-> delete the latest filtering rule
-
-## License
-
-[MIT](LICENSE) License
+Licensed under the [MIT License](LICENSE).
