@@ -1,46 +1,79 @@
 import { z } from "zod";
 import { DnsRecords, Filtering, type Rule } from "./schema";
 
-export const parsed = z
-  .object({
-    ADGUARD_USERNAME: z.string(),
-    ADGUARD_PASSWORD: z.string(),
-    ADGUARD_URL: z.string(),
-  })
-  .safeParse(process.env);
+// Configuración dinámica para Smithery
+let adguardConfig: {
+  username: string;
+  password: string;
+  url: string;
+} = {
+  username: '',
+  password: '',
+  url: ''
+};
 
-if (!parsed.success) {
-  console.error("Invalid environment variables", parsed.error.format());
-  throw new Error("Invalid environment variables");
-}
+// Función para configurar la API con parámetros de Smithery
+const configure = (config: { adguardUsername: string; adguardPassword: string; adguardUrl: string }) => {
+  adguardConfig.username = config.adguardUsername;
+  adguardConfig.password = config.adguardPassword;
+  adguardConfig.url = config.adguardUrl;
+};
 
-const env = parsed.data;
+// Fallback para desarrollo local con variables de entorno
+const parseEnv = () => {
+  const parsed = z
+    .object({
+      ADGUARD_USERNAME: z.string().optional(),
+      ADGUARD_PASSWORD: z.string().optional(),
+      ADGUARD_URL: z.string().optional(),
+    })
+    .safeParse(process.env);
+
+  if (parsed.success && parsed.data.ADGUARD_USERNAME && parsed.data.ADGUARD_PASSWORD && parsed.data.ADGUARD_URL) {
+    adguardConfig.username = parsed.data.ADGUARD_USERNAME;
+    adguardConfig.password = parsed.data.ADGUARD_PASSWORD;
+    adguardConfig.url = parsed.data.ADGUARD_URL;
+  }
+};
+
+// Inicializar con variables de entorno si están disponibles
+parseEnv();
 
 const regex = /(@@)?\|\|(.+)\^\$.+/;
 
-const Authorization = Buffer.from(
-  `${env.ADGUARD_USERNAME}:${env.ADGUARD_PASSWORD}`
-).toString("base64");
-
-const headers = {
-  Authorization: `Basic ${Authorization}`,
+const getAuthorization = () => {
+  if (!adguardConfig.username || !adguardConfig.password) {
+    throw new Error("AdGuard credentials not configured");
+  }
+  return Buffer.from(
+    `${adguardConfig.username}:${adguardConfig.password}`
+  ).toString("base64");
 };
+
+const getHeaders = () => ({
+  Authorization: `Basic ${getAuthorization()}`,
+});
 
 const serializeRule = (rule: Rule) => {
   return `${rule.allowed ? "@@" : ""}||${rule.domain}^$important`;
 };
 
-const api = (path: string, body?: Record<string, unknown>) =>
-  fetch(`${env.ADGUARD_URL}/control/${path}`, {
+const api = (path: string, body?: Record<string, unknown>) => {
+  if (!adguardConfig.url) {
+    throw new Error("AdGuard URL not configured");
+  }
+  return fetch(`${adguardConfig.url}/control/${path}`, {
     method: body ? "POST" : "GET",
     headers: {
-      ...headers,
+      ...getHeaders(),
       "Content-Type": "application/json",
     },
     body: body ? JSON.stringify(body) : undefined,
   });
+};
 
 export const Api = {
+  configure,
   rules: {
     list: async () => {
       const res = await api("filtering/status");

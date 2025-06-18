@@ -1,12 +1,23 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { z } from "zod";
 import { Api } from "./api";
 
-const server = new McpServer({
-  name: "mcp-adguard-home",
-  version: "1.0.0",
+// Configuration schema para Smithery
+export const configSchema = z.object({
+  adguardUsername: z.string().describe("Username for AdGuard Home authentication"),
+  adguardPassword: z.string().describe("Password for AdGuard Home authentication"),
+  adguardUrl: z.string().describe("Base URL of your AdGuard Home instance")
 });
+
+// Función para crear servidor stateless compatible con Smithery
+export function createStatelessServer({ config }: { config: z.infer<typeof configSchema> }) {
+  // Configurar API con los parámetros de configuración
+  Api.configure(config);
+
+  const server = new McpServer({
+    name: "mcp-adguard-home",
+    version: "1.0.1",
+  });
 
 server.tool("list_rewrite_dns_records", "List all DNS records", async () => {
   const records = await Api.rewrite.list();
@@ -110,9 +121,21 @@ server.tool(
         },
       ],
     };
-  }
-);
+  }  );
 
-// Start receiving messages on stdin and sending messages on stdout
-const transport = new StdioServerTransport();
-await server.connect(transport);
+  return server.server;
+}
+
+// Función para crear servidor stateful compatible con Smithery (opcional)
+export function createStatefulServer({ 
+  sessionId, 
+  config 
+}: { 
+  sessionId: string; 
+  config: z.infer<typeof configSchema> 
+}) {
+  // En este caso, no necesitamos estado específico por sesión
+  // pero podríamos agregar logging o métricas por sesión si fuera necesario
+  console.log(`Creating stateful server for session: ${sessionId}`);
+  return createStatelessServer({ config });
+}

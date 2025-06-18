@@ -5,7 +5,17 @@ A [Model Context Protocol](https://modelcontextprotocol.io/introduction) (MCP) s
 [![npm version](https://badge.fury.io/js/@fcannizzaro%2Fmcp-adguard-home.svg)](https://www.npmjs.com/package/@fcannizzaro/mcp-adguard-home)
 [![CI: Publish Package](https://github.com/fcannizzaro/mcp-adguard-home/actions/workflows/publish-package.yaml/badge.svg)](https://github.com/fcannizzaro/mcp-adguard-home/actions/workflows/publish-package.yaml)
 
-## 📦 Installation
+## 🚀 Quick Start with Smithery.ai
+
+This server is ready to deploy on [Smithery.ai](https://smithery.ai)! Simply upload this repository and configure your AdGuard Home credentials.
+
+### Configuration Required:
+
+- **AdGuard Username**: Your AdGuard Home admin username
+- **AdGuard Password**: Your AdGuard Home admin password
+- **AdGuard URL**: Base URL of your AdGuard Home instance (e.g., `http://localhost:3000`)
+
+## 📦 Local Installation
 
 ```bash
 npm i -g @fcannizzaro/mcp-adguard-home
@@ -38,6 +48,32 @@ Configure your MCP client to use `mcp-adguard-home` (it's a stdio server).
 - 📝 **List rules** (`list_dns_filtering_rules`)
 - 🔧 **Add/Update rules** (`manage_dns_filtering_rules`)
 - ❌ **Delete rules** (`remove_dns_filtering_rules`)
+
+## 🔧 Development with Smithery CLI
+
+```bash
+# Install Smithery CLI globally
+npm install -g @smithery/cli
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run smithery:build
+```
+
+## ⚙️ Local Configuration (Environment Variables)
+
+```dotenv
+# AdGuard Home configuration
+ADGUARD_USERNAME=
+ADGUARD_PASSWORD=
+ADGUARD_URL=
+
+# Smithery CLI configuration
+SMITHERY_PORT=3000
+SMITHERY_HOST=localhost
+```
 
 ## 📄 License
 

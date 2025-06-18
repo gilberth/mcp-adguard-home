@@ -1,0 +1,23 @@
+runtime: "typescript"
+startCommand:
+  type: "http"
+  configSchema:
+    type: "object"
+    required: ["adguardUsername", "adguardPassword", "adguardUrl"]
+    properties:
+      adguardUsername:
+        type: "string"
+        title: "AdGuard Username"
+        description: "Username for AdGuard Home authentication"
+      adguardPassword:
+        type: "string"
+        title: "AdGuard Password"
+        description: "Password for AdGuard Home authentication"
+      adguardUrl:
+        type: "string"
+        title: "AdGuard URL"
+        description: "Base URL of your AdGuard Home instance (e.g., http://localhost:3000)"
+  exampleConfig:
+    adguardUsername: "admin"
+    adguardPassword: "password123"
+    adguardUrl: "http://localhost:3000"
