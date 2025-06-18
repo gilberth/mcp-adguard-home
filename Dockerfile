@@ -3,10 +3,10 @@ FROM oven/bun:1-slim
 WORKDIR /app
 
 # Copy package files
-COPY package.json bun.lock ./
+COPY package.json ./
 
-# Install dependencies with Bun
-RUN bun install --frozen-lockfile
+# Install dependencies with Bun (will generate lockfile if needed)
+RUN bun install
 
 # Copy application code
 COPY . .
