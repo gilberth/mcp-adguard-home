@@ -4,12 +4,15 @@
   "version": "1.0.1",
   "author": "Francesco Saverio Cannizzaro <fcannizzaro>",
   "main": "dist/index.js",
+  "module": "./src/index.ts",
   "license": "MIT",
   "repository": "https://github.com/fcannizzaro/mcp-adguard-home",
   "types": "./index.d.ts",
   "scripts": {
     "build": "swc src --source-maps --out-dir dist",
-    "inspect": "@modelcontextprotocol/inspector bun src/index.ts"
+    "inspect": "@modelcontextprotocol/inspector bun src/index.ts",
+    "dev": "npx @smithery/cli dev",
+    "smithery:build": "npx @smithery/cli build"
   },
   "bin": {
     "mcp-adguard-home": "dist/index.js"
@@ -21,6 +24,7 @@
   ],
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.10.1",
+    "@smithery/sdk": "^1.0.0",
     "zod": "^3.24.3"
   },
   "devDependencies": {
@@ -28,6 +32,8 @@
     "@swc/cli": "^0.7.3",
     "@swc/core": "^1.11.21",
     "@types/bun": "^1.2.10",
+    "@types/node": "^22.0.0",
+    "@smithery/cli": "^1.0.0",
     "typescript": "^5.8.3"
   },
   "publishConfig": {
