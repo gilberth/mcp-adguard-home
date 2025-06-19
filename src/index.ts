@@ -10,7 +10,7 @@ export const configSchema = z.object({
 });
 
 // Función para crear servidor MCP - exportada para Smithery
-export function createStatelessServer({ sessionId, config }: { sessionId: string; config: z.infer<typeof configSchema> }) {
+export function createStatelessServer({ sessionId, config }: { sessionId: string; config?: z.infer<typeof configSchema> }) {
   // NO configurar API automáticamente - solo cuando se ejecute una herramienta
   
   const server = new McpServer({
@@ -20,22 +20,27 @@ export function createStatelessServer({ sessionId, config }: { sessionId: string
 
   // Función helper para configurar API solo cuando sea necesario
   const configureApiIfNeeded = () => {
-    if (config.adguardUsername && config.adguardPassword && config.adguardUrl) {
-      Api.configure(config);
-      return true;
+    try {
+      if (config?.adguardUsername && config?.adguardPassword && config?.adguardUrl) {
+        Api.configure(config);
+        return true;
+      }
+      return false;
+    } catch (error) {
+      console.error('Error configuring API:', error);
+      return false;
     }
-    return false;
   };
 
-  // Herramienta de verificación de conectividad (sin timeout)
+  // Herramienta de verificación de conectividad
   server.tool("check_connection", "Check AdGuard Home connection status", async () => {
-    if (!configureApiIfNeeded()) {
-      return {
-        content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
-      };
-    }
-    
     try {
+      if (!configureApiIfNeeded()) {
+        return {
+          content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
+        };
+      }
+      
       const records = await Api.rewrite.list();
       return {
         content: [{ type: "text", text: `✅ Connected! Found ${records.length} DNS records` }],
@@ -49,13 +54,13 @@ export function createStatelessServer({ sessionId, config }: { sessionId: string
 
   // DNS Tools
   server.tool("list_dns_records", "List all DNS rewrite records", async () => {
-    if (!configureApiIfNeeded()) {
-      return {
-        content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
-      };
-    }
-    
     try {
+      if (!configureApiIfNeeded()) {
+        return {
+          content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
+        };
+      }
+      
       const records = await Api.rewrite.list();
       return {
         content: [{ 
@@ -67,7 +72,7 @@ export function createStatelessServer({ sessionId, config }: { sessionId: string
       };
     } catch (error) {
       return {
-        content: [{ type: "text", text: `Error: ${error instanceof Error ? error.message : 'Unknown error'}` }],
+        content: [{ type: "text", text: `❌ Error: ${error instanceof Error ? error.message : 'Unknown error'}` }],
       };
     }
   });
@@ -80,14 +85,14 @@ export function createStatelessServer({ sessionId, config }: { sessionId: string
       ip: z.string().describe("IP address"),
     },
     async (args: { domain: string; ip: string }) => {
-      const { domain, ip } = args;
-      if (!configureApiIfNeeded()) {
-        return {
-          content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
-        };
-      }
-      
       try {
+        const { domain, ip } = args;
+        if (!configureApiIfNeeded()) {
+          return {
+            content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
+          };
+        }
+        
         await Api.rewrite.add(domain, ip);
         return {
           content: [{ type: "text", text: `✅ Added DNS record: ${domain} -> ${ip}` }],
@@ -108,14 +113,14 @@ export function createStatelessServer({ sessionId, config }: { sessionId: string
       ip: z.string().describe("IP address"),
     },
     async (args: { domain: string; ip: string }) => {
-      const { domain, ip } = args;
-      if (!configureApiIfNeeded()) {
-        return {
-          content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
-        };
-      }
-      
       try {
+        const { domain, ip } = args;
+        if (!configureApiIfNeeded()) {
+          return {
+            content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
+          };
+        }
+        
         await Api.rewrite.remove(domain, ip);
         return {
           content: [{ type: "text", text: `✅ Removed DNS record: ${domain} -> ${ip}` }],
