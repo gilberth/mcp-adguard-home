@@ -20,17 +20,28 @@ export function createStatelessServer({ config }: { config: z.infer<typeof confi
   });
 
 server.tool("list_rewrite_dns_records", "List all DNS records", async () => {
-  const records = await Api.rewrite.list();
-  return {
-    content: [
-      {
-        type: "text",
-        text: records
-          .map((record) => `${record.domain} -> ${record.ip}`)
-          .join("\n"),
-      },
-    ],
-  };
+  try {
+    const records = await Api.rewrite.list();
+    return {
+      content: [
+        {
+          type: "text",
+          text: records.length > 0 
+            ? records.map((record) => `${record.domain} -> ${record.ip}`).join("\n")
+            : "No DNS rewrite records found.",
+        },
+      ],
+    };
+  } catch (error) {
+    return {
+      content: [
+        {
+          type: "text",
+          text: `❌ Error listing DNS records: ${error instanceof Error ? error.message : 'Unknown error'}. Use 'check_adguard_connection' to verify your configuration.`,
+        },
+      ],
+    };
+  }
 });
 
 server.tool(
@@ -121,7 +132,42 @@ server.tool(
       ],
     };
   }
-);
+);  // Herramienta de verificación de conectividad
+  server.tool("check_adguard_connection", "Check connection to AdGuard Home", async () => {
+    try {
+      // Verificar si la configuración está completa
+      if (!config.adguardUsername || !config.adguardPassword || !config.adguardUrl) {
+        return {
+          content: [
+            {
+              type: "text",
+              text: `❌ Configuration incomplete. Please ensure all AdGuard credentials are provided:\n- Username: ${config.adguardUsername ? '✅' : '❌'}\n- Password: ${config.adguardPassword ? '✅' : '❌'}\n- URL: ${config.adguardUrl ? '✅' : '❌'}`,
+            },
+          ],
+        };
+      }
+
+      // Intentar una llamada simple para verificar la conectividad
+      const records = await Api.rewrite.list();
+      return {
+        content: [
+          {
+            type: "text",
+            text: `✅ Connection successful! Connected to AdGuard Home at ${config.adguardUrl}. Found ${records.length} DNS records.`,
+          },
+        ],
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `❌ Connection failed: ${error instanceof Error ? error.message : 'Unknown error'}\n\nPlease verify:\n1. AdGuard Home is running and accessible\n2. Username and password are correct\n3. URL is correct (including http:// or https://)`,
+          },
+        ],
+      };
+    }
+  });
 
   return server.server;
 }

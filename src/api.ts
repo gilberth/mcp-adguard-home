@@ -58,18 +58,42 @@ const serializeRule = (rule: Rule) => {
   return `${rule.allowed ? "@@" : ""}||${rule.domain}^$important`;
 };
 
-const api = (path: string, body?: Record<string, unknown>) => {
+const api = async (path: string, body?: Record<string, unknown>) => {
   if (!adguardConfig.url) {
     throw new Error("AdGuard URL not configured");
   }
-  return fetch(`${adguardConfig.url}/control/${path}`, {
-    method: body ? "POST" : "GET",
-    headers: {
-      ...getHeaders(),
-      "Content-Type": "application/json",
-    },
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+  
+  try {
+    const response = await fetch(`${adguardConfig.url}/control/${path}`, {
+      method: body ? "POST" : "GET",
+      headers: {
+        ...getHeaders(),
+        "Content-Type": "application/json",
+      },
+      body: body ? JSON.stringify(body) : undefined,
+      signal: controller.signal,
+    });
+    
+    clearTimeout(timeoutId);
+    
+    if (!response.ok) {
+      throw new Error(`AdGuard API error: ${response.status} ${response.statusText}`);
+    }
+    
+    return response;
+  } catch (error) {
+    clearTimeout(timeoutId);
+    if (error instanceof Error) {
+      if (error.name === 'AbortError') {
+        throw new Error('AdGuard API request timed out');
+      }
+      throw new Error(`AdGuard API error: ${error.message}`);
+    }
+    throw error;
+  }
 };
 
 export const Api = {
