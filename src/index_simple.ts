@@ -11,27 +11,19 @@ export const configSchema = z.object({
 
 // Función para crear servidor stateless compatible con Smithery
 export function createStatelessServer({ config }: { config: z.infer<typeof configSchema> }) {
-  // NO configurar API automáticamente - solo cuando se ejecute una herramienta
-  
+  // Configurar API con los parámetros de configuración
+  Api.configure(config);
+
   const server = new McpServer({
     name: "mcp-adguard-home",
     version: "1.0.1",
   });
 
-  // Función helper para configurar API solo cuando sea necesario
-  const configureApiIfNeeded = () => {
-    if (config.adguardUsername && config.adguardPassword && config.adguardUrl) {
-      Api.configure(config);
-      return true;
-    }
-    return false;
-  };
-
   // Herramienta de verificación de conectividad (sin timeout)
   server.tool("check_connection", "Check AdGuard Home connection status", async () => {
-    if (!configureApiIfNeeded()) {
+    if (!config.adguardUsername || !config.adguardPassword || !config.adguardUrl) {
       return {
-        content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
+        content: [{ type: "text", text: "❌ Configuration incomplete" }],
       };
     }
     
@@ -49,12 +41,6 @@ export function createStatelessServer({ config }: { config: z.infer<typeof confi
 
   // DNS Tools
   server.tool("list_dns_records", "List all DNS rewrite records", async () => {
-    if (!configureApiIfNeeded()) {
-      return {
-        content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
-      };
-    }
-    
     try {
       const records = await Api.rewrite.list();
       return {
@@ -80,12 +66,6 @@ export function createStatelessServer({ config }: { config: z.infer<typeof confi
       ip: z.string().describe("IP address"),
     },
     async ({ domain, ip }) => {
-      if (!configureApiIfNeeded()) {
-        return {
-          content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
-        };
-      }
-      
       try {
         await Api.rewrite.add(domain, ip);
         return {
@@ -107,12 +87,6 @@ export function createStatelessServer({ config }: { config: z.infer<typeof confi
       ip: z.string().describe("IP address"),
     },
     async ({ domain, ip }) => {
-      if (!configureApiIfNeeded()) {
-        return {
-          content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
-        };
-      }
-      
       try {
         await Api.rewrite.remove(domain, ip);
         return {
