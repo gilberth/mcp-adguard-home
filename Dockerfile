@@ -15,4 +15,4 @@ COPY . .
 RUN bun run build
 
 # Set the entry point
-CMD ["bun", "run", "dist/index.js"]
+CMD ["node", "dist/index.js"]

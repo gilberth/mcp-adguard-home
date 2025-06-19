@@ -110,8 +110,7 @@ server.tool(
   "Remove a DNS filtering record rules",
   {
     domains: z.array(z.string()),
-  },
-  async ({ domains }) => {
+  },  async ({ domains }) => {
     await Api.rules.remove(domains);
     return {
       content: [
@@ -121,7 +120,8 @@ server.tool(
         },
       ],
     };
-  }  );
+  }
+);
 
   return server.server;
 }
