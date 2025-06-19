@@ -1,3 +1,4 @@
+import { createStatelessServer } from "@smithery/sdk/server/stateless.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { Api } from "./api.js";
@@ -9,8 +10,8 @@ export const configSchema = z.object({
   adguardUrl: z.string().describe("Base URL of your AdGuard Home instance")
 });
 
-// Función para crear servidor stateless compatible con Smithery
-export function createStatelessServer({ config }: { config: z.infer<typeof configSchema> }) {
+// Función para crear servidor MCP
+function createMcpServer({ config }: { config: z.infer<typeof configSchema> }) {
   // NO configurar API automáticamente - solo cuando se ejecute una herramienta
   
   const server = new McpServer({
@@ -61,7 +62,7 @@ export function createStatelessServer({ config }: { config: z.infer<typeof confi
         content: [{ 
           type: "text", 
           text: records.length > 0 
-            ? records.map(r => `${r.domain} -> ${r.ip}`).join("\n")
+            ? records.map((r: any) => `${r.domain} -> ${r.ip}`).join("\n")
             : "No DNS records found"
         }],
       };
@@ -79,7 +80,8 @@ export function createStatelessServer({ config }: { config: z.infer<typeof confi
       domain: z.string().describe("Domain name"),
       ip: z.string().describe("IP address"),
     },
-    async ({ domain, ip }) => {
+    async (args: { domain: string; ip: string }) => {
+      const { domain, ip } = args;
       if (!configureApiIfNeeded()) {
         return {
           content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
@@ -106,7 +108,8 @@ export function createStatelessServer({ config }: { config: z.infer<typeof confi
       domain: z.string().describe("Domain name"),
       ip: z.string().describe("IP address"),
     },
-    async ({ domain, ip }) => {
+    async (args: { domain: string; ip: string }) => {
+      const { domain, ip } = args;
       if (!configureApiIfNeeded()) {
         return {
           content: [{ type: "text", text: "❌ Configuration incomplete. Please configure AdGuard credentials first." }],
@@ -129,14 +132,11 @@ export function createStatelessServer({ config }: { config: z.infer<typeof confi
   return server.server;
 }
 
-// Función para crear servidor stateful compatible con Smithery
-export function createStatefulServer({ 
-  sessionId, 
-  config 
-}: { 
-  sessionId: string; 
-  config: z.infer<typeof configSchema> 
-}) {
-  console.log(`Creating server for session: ${sessionId}`);
-  return createStatelessServer({ config });
-}
+// Crear el servidor stateless usando Smithery SDK
+const { app } = createStatelessServer(createMcpServer);
+
+// Iniciar el servidor
+const PORT = 8081;
+app.listen(PORT, () => {
+  console.log(`MCP server running on port ${PORT}`);
+});
