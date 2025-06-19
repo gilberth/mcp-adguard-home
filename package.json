@@ -30,11 +30,12 @@
   },
   "devDependencies": {
     "@biomejs/biome": "1.9.4",
+    "@smithery/cli": "^1.0.0",
     "@swc/cli": "^0.7.3",
     "@swc/core": "^1.11.21",
     "@types/bun": "^1.2.10",
     "@types/node": "^22.0.0",
-    "@smithery/cli": "^1.0.0",
+    "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   },
   "publishConfig": {
