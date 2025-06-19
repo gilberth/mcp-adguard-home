@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { DnsRecords, Filtering, type Rule } from "./schema";
+import { DnsRecords, Filtering, type Rule } from "./schema.js";
 
 // Configuración dinámica para Smithery
 let adguardConfig: {

@@ -9,7 +9,9 @@
   "repository": "https://github.com/fcannizzaro/mcp-adguard-home",
   "types": "./index.d.ts",
   "scripts": {
-    "build": "swc src --source-maps --out-dir dist",
+    "build": "bun build src/index.ts --outdir dist --target node --format esm --splitting --sourcemap",
+    "build:tsc": "tsc --build",
+    "build:swc": "swc src --source-maps --out-dir dist",
     "inspect": "@modelcontextprotocol/inspector bun src/index.ts",
     "dev": "npx @smithery/cli dev",
     "smithery:build": "npx @smithery/cli build"

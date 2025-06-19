@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { Api } from "./api";
+import { Api } from "./api.js";
 
 // Configuration schema para Smithery
 export const configSchema = z.object({
