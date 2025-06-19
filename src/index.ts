@@ -1,3 +1,4 @@
+import { createStatelessServer } from '@smithery/sdk/server/stateless.js';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { Api } from "./api.js";
@@ -10,7 +11,7 @@ export const configSchema = z.object({
 });
 
 // Función para crear servidor MCP - exportada para Smithery
-export function createStatelessServer({ sessionId, config }: { sessionId: string; config?: z.infer<typeof configSchema> }) {
+export function createMcpServer({ config }: { config?: z.infer<typeof configSchema> }) {
   // NO configurar API automáticamente - solo cuando se ejecute una herramienta
   
   const server = new McpServer({
@@ -136,4 +137,11 @@ export function createStatelessServer({ sessionId, config }: { sessionId: string
   return server.server;
 }
 
-// Smithery se encargará de crear y ejecutar el servidor
+// Crear el servidor stateless usando Smithery SDK
+const { app } = createStatelessServer(createMcpServer);
+
+// Iniciar el servidor
+const PORT = 8081;
+app.listen(PORT, () => {
+  console.log(`MCP AdGuard Home server running on port ${PORT}`);
+});
