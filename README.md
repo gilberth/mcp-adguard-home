@@ -17,8 +17,7 @@ This server is ready to deploy on [Smithery.ai](https://smithery.ai)! Simply upl
 
 ## 📦 Local Installation
 
-  {
-  
+  {  
     "mcpServers": {
     
       "adguard-home": {
@@ -37,10 +36,9 @@ This server is ready to deploy on [Smithery.ai](https://smithery.ai)! Simply upl
           
         }
         
-      }
+      }      
       
-    }
-    
+    }    
   }
 
 
