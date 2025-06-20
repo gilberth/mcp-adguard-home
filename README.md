@@ -17,64 +17,22 @@ This server is ready to deploy on [Smithery.ai](https://smithery.ai)! Simply upl
 
 ## 📦 Local Installation
 
-```bash
-npm i -g @fcannizzaro/mcp-adguard-home
-```
+  {
+    "mcpServers": {
+      "adguard-home": {
+        "command": "npx",
+        "args": ["-y", "@thelord/mcp-adguard-home"],
+        "env": {
+          "ADGUARD_USERNAME": "admin",
+          "ADGUARD_PASSWORD": "tu-password",
+          "ADGUARD_URL": "http://192.168.1.100:3000"
+        }
+      }
+    }
+  }
 
-## ⚙️ Configuration
-
-Set the following environment variables:
-
-```dotenv
-ADGUARD_USERNAME=
-ADGUARD_PASSWORD=
-ADGUARD_URL=
-```
-
-## 🚀 Usage
-
-Configure your MCP client to use `mcp-adguard-home` (it's a stdio server).
-
-![AdGuard Home](/.media/adguard-home.gif)
-
-## 🧰 Rewrite DNS Tools
-
-- 📋 **List records** (`list_rewrite_dns_records`)
-- ➕ **Add record** (`add_rewrite_dns_record`)
-- ❌ **Delete record** (`remove_rewrite_dns_record`)
-
-## 🔧 DNS Filtering Tools
-
-- 📝 **List rules** (`list_dns_filtering_rules`)
-- 🔧 **Add/Update rules** (`manage_dns_filtering_rules`)
-- ❌ **Delete rules** (`remove_dns_filtering_rules`)
-
-## 🔧 Development with Smithery CLI
-
-```bash
-# Install Smithery CLI globally
-npm install -g @smithery/cli
-
-# Start development server
-npm run dev
-
-# Build for production
-npm run smithery:build
-```
-
-## ⚙️ Local Configuration (Environment Variables)
-
-```dotenv
-# AdGuard Home configuration
-ADGUARD_USERNAME=
-ADGUARD_PASSWORD=
-ADGUARD_URL=
-
-# Smithery CLI configuration
-SMITHERY_PORT=3000
-SMITHERY_HOST=localhost
-```
 
 ## 📄 License
 
 Licensed under the [MIT License](LICENSE).
+A FORK FROM : https://github.com/fcannizzaro/mcp-adguard-home 
