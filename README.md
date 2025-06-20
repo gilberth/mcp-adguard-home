@@ -18,17 +18,29 @@ This server is ready to deploy on [Smithery.ai](https://smithery.ai)! Simply upl
 ## 📦 Local Installation
 
   {
+  
     "mcpServers": {
+    
       "adguard-home": {
+      
         "command": "npx",
+        
         "args": ["-y", "@thelord/mcp-adguard-home"],
+        
         "env": {
+        
           "ADGUARD_USERNAME": "admin",
+          
           "ADGUARD_PASSWORD": "tu-password",
+          
           "ADGUARD_URL": "http://192.168.1.100:3000"
+          
         }
+        
       }
+      
     }
+    
   }
 
 
