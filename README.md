@@ -35,4 +35,5 @@ This server is ready to deploy on [Smithery.ai](https://smithery.ai)! Simply upl
 ## 📄 License
 
 Licensed under the [MIT License](LICENSE).
+
 A FORK FROM : https://github.com/fcannizzaro/mcp-adguard-home 
